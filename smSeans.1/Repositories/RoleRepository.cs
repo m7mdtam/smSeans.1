@@ -13,7 +13,7 @@ public class RoleRepository : IRoleRepository
 
     public async Task<Role> GetRoleByIdAsync(int id)
     {
-        var query = "SELECT * FROM Roles WHERE Id = @Id";
+        var query = "SELECT * FROM Role WHERE Id = @Id";
 
         using (var connection = _context.CreateConnection())
         {
@@ -23,7 +23,7 @@ public class RoleRepository : IRoleRepository
 
     public async Task<int> CreateRoleAsync(Role role)
     {
-        var query = "INSERT INTO Roles (RoleName, Description) VALUES (@RoleName, @Description); SELECT CAST(SCOPE_IDENTITY() AS INT)";
+        var query = "INSERT INTO Role (role_name, description) VALUES (@role_name, @description); SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
         using (var connection = _context.CreateConnection())
         {
@@ -33,7 +33,7 @@ public class RoleRepository : IRoleRepository
 
     public async Task<bool> UpdateRoleAsync(Role role)
     {
-        var query = "UPDATE Roles SET RoleName = @RoleName, Description = @Description WHERE Id = @Id";
+        var query = "UPDATE Role SET role_name = @role_name, description = @description WHERE Id = @Id";
 
         using (var connection = _context.CreateConnection())
         {
@@ -44,7 +44,7 @@ public class RoleRepository : IRoleRepository
 
     public async Task<bool> DeleteRoleAsync(int id)
     {
-        var query = "DELETE FROM Roles WHERE Id = @Id";
+        var query = "DELETE FROM Role WHERE Id = @Id";
 
         using (var connection = _context.CreateConnection())
         {

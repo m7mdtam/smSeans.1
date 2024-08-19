@@ -36,22 +36,32 @@ public class UserRepository : IUserRepository
     // Create a new user
     public async Task<int> CreateUserAsync(User user)
     {
-        var query = @"INSERT INTO [USER] (username, email, password, role_name, created_at, updated_at) 
-                  VALUES (@username, @email, @password, @role_name, @created_at, @updated_at)";
+        if (string.IsNullOrEmpty(user.password))
+        {
+            throw new ArgumentException("Password cannot be null or empty", nameof(user.password));
+        }
+
+        var query = @"INSERT INTO [USER] (username, email, password, role_name, google_id, created_at, updated_at, last_login_date, session_count) 
+                  VALUES (@username, @email, @password, @role_name, @google_id, @created_at, @updated_at, @last_login_date, @session_count);
+                  SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         using (var connection = _context.CreateConnection())
         {
-            return await connection.ExecuteAsync(query, new
+            return await connection.QuerySingleAsync<int>(query, new
             {
                 user.username,
                 user.email,
                 user.password,
+                user.google_id,
                 user.role_name,
                 user.created_at,
-                user.updated_at
+                user.updated_at,
+                last_login_date = user.last_login_date ?? (object)DBNull.Value,
+                session_count = user.session_count ?? (object)DBNull.Value
             });
         }
     }
+
 
 
     // Update an existing user
@@ -62,8 +72,15 @@ public class UserRepository : IUserRepository
             return false;
         }
 
-        var query = "UPDATE [USER] SET username = @username, email = @email, " +
-                    "password = @password, role_name = @role_name, updated_at = @updated_at WHERE Id = @Id";
+        var query = @"UPDATE [USER] 
+                  SET username = @username, 
+                      email = @email, 
+                      password = @password, 
+                      role_name = @role_name, 
+                      updated_at = @updated_at,
+                      last_login_date = @last_login_date,
+                      session_count = @session_count 
+                  WHERE Id = @Id";
 
         using (var connection = _context.CreateConnection())
         {
@@ -74,12 +91,15 @@ public class UserRepository : IUserRepository
                 password = user.password,
                 role_name = user.role_name,
                 updated_at = user.updated_at,
+                last_login_date = user.last_login_date ?? (object)DBNull.Value,
+                session_count = user.session_count ?? (object)DBNull.Value,
                 Id = user.Id
             });
 
             return rowsAffected > 0;
         }
     }
+
 
     // Delete a user by their ID
     public async Task<bool> DeleteUserAsync(int id)

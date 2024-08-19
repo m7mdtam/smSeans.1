@@ -36,16 +36,26 @@ public class Startup
 
         services.AddControllers();
         services.AddScoped<IUserRepository, UserRepository>();
+
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+
         services.AddScoped<IComplaintDetailsRepository, ComplaintDetailsRepository>();
+        services.AddScoped<IComplaintRepository, ComplaintRepository>();
+        services.AddScoped<IErrorLogRepository, ErrorLogRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
+
         services.AddScoped<INotificationSettingRepository, NotificationSettingRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<ITaskRepository, TaskRepository>();
+
+
         services.AddSingleton<DapperContext>();
 
         services.AddEndpointsApiExplorer();

@@ -36,7 +36,8 @@ public class AppointmentController : ControllerBase
             member_id = appointmentDto.member_id,
             assistant_id = appointmentDto.assistant_id,
             appointment_date = appointmentDto.appointment_date,
-            status = appointmentDto.status
+            status = appointmentDto.status,
+            created_at = DateTime.UtcNow
         };
 
         await _appointmentRepository.CreateAppointmentAsync(appointment);

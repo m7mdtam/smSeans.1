@@ -24,24 +24,32 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser([FromBody] UserCreateDTO userDto)
+    public async Task<IActionResult> CreateUser(UserDTO userDto)
     {
-        if (userDto == null)
+        if (string.IsNullOrEmpty(userDto.password))
         {
-            return BadRequest("User data is required.");
+            return BadRequest("Password is required.");
         }
 
         var user = new User
         {
             username = userDto.username,
             email = userDto.email,
-            created_at = DateTime.Now
+            password = userDto.password,
+            role_name = userDto.role_name,
+            google_id= userDto.google_id,
+            status = userDto.status,
+            created_at = DateTime.UtcNow,
+            updated_at = DateTime.UtcNow
+            
+
+            
         };
 
-        await _userRepository.CreateUserAsync(user);
-
-        return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+        var userId = await _userRepository.CreateUserAsync(user);
+        return Ok(userId);
     }
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto userDto)
