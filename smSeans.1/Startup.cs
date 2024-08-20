@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+ using Microsoft.OpenApi.Models;
+using System.Security.Cryptography.Xml;
 
 public class Startup
 {
@@ -59,7 +61,30 @@ public class Startup
         services.AddSingleton<DapperContext>();
 
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+
+            options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
+            {
+                Name = "Authorization" , 
+                Description="Enter the Bearer Authorization : `Bearer Generated-JWT-Token`",
+                In =ParameterLocation.Header,
+                Type=SecuritySchemeType.ApiKey,
+                Scheme="Bearer",
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme{
+            Reference=new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id=JwtBearerDefaults.AuthenticationScheme
+            }
+            },new string[]{}
+                }
+                });
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

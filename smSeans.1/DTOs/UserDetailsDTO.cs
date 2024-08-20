@@ -21,7 +21,6 @@ public class UserDetailsUpdateDto
     public string last_name { get; set; }
     public DateTime? birth_date { get; set; }
     public string gender { get; set; }
-    public string phone_number { get; set; }
     public string qr_code { get; set; }
     public string card_id { get; set; }
     public DateTime? card_issued_at { get; set; }

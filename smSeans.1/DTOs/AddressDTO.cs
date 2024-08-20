@@ -1,6 +1,6 @@
 ﻿public class AddressCreateDto
 {
-    public int Id { get; set; }
+  
 
     public required string street { get; set; }
     public required string city { get; set; }

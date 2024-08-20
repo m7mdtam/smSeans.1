@@ -41,8 +41,8 @@ public class UserRepository : IUserRepository
             throw new ArgumentException("Password cannot be null or empty", nameof(user.password));
         }
 
-        var query = @"INSERT INTO [USER] (username, email, password, role_name, google_id, created_at, updated_at, last_login_date, session_count) 
-                  VALUES (@username, @email, @password, @role_name, @google_id, @created_at, @updated_at, @last_login_date, @session_count);
+        var query = @"INSERT INTO [USER] (username, email, password, role_name, google_id, created_at, updated_at, last_login_date, session_count, phone_number, first_name, last_name) 
+                  VALUES (@username, @email, @password, @role_name, @google_id, @created_at, @updated_at, @last_login_date, @session_count, @phone_number, @first_name, @last_name);
                   SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         using (var connection = _context.CreateConnection())
@@ -57,9 +57,12 @@ public class UserRepository : IUserRepository
                 user.created_at,
                 user.updated_at,
                 last_login_date = user.last_login_date ?? (object)DBNull.Value,
-                session_count = user.session_count ?? (object)DBNull.Value
+                session_count = user.session_count ?? (object)DBNull.Value,
+                user.phone_number,
+                user.first_name, user.last_name,
             });
         }
+   
     }
 
 

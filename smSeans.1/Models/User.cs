@@ -11,4 +11,11 @@
     public DateTime? last_login_date { get; set; }
     public int? session_count { get; set; }
     public string role_name { get; set; }
+    public string phone_number { get; set; }
+    public string first_name { get; set; }
+
+    public string last_name { get; set; }
+
+
+
 }
